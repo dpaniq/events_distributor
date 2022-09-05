@@ -21,23 +21,25 @@ The config available format is `json/yaml` file
  > **segment_name**
  Bad symbols in name \` - ' - "
 
-#### Interface
+#### Config interface
 ```
-
     interface Config {
-        config_name: event_path
-        event_path: event_path 
-        segments: [
+        events: [
             {
-                event_path: string
-                columns: number
-                rows: number
-            },
-            {
-                columns: number
-                rows: number
-            },
-            ...
+                name: string
+                segments: [
+                    {
+                        name: string
+                        columns: number
+                        rows: number
+                    },
+                    {
+                        name: string
+                        columns: number
+                        rows: number
+                    },
+                ]
+            }
         ]
     }
 ```

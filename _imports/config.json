@@ -1,25 +1,20 @@
 {
-    "events": [
+    "name": "event1",
+    "segments": [
         {
-            "name": "events1",
-            "extension": "csv",
-            "segments": [
-                {
-                    "segment_name": "1. Проекты в сфере онлайн-образования",
-                    "columns": 5,
-                    "rows": 100
-                },
-                {
-                    "segment_name": "2. Медицина",
-                    "columns": 3,
-                    "rows": 200
-                },
-                {
-                    "segment_name": "3. Логистика и строительство",
-                    "columns": 1,
-                    "rows": 300
-                }
-            ]
+            "name": "1. Проекты в сфере онлайн-образования",
+            "columns": 5,
+            "rows": 100
+        },
+        {
+            "name": "2. Медицина",
+            "columns": 3,
+            "rows": 200
+        },
+        {
+            "name": "3. Логистика и строительство",
+            "columns": 1,
+            "rows": 300
         }
     ]
 }

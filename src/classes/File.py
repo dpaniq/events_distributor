@@ -1,22 +1,29 @@
 import csv
-# import yaml
 import json
-
+from abc import ABC
 from os.path import exists
 
+from .Error import Error
 
-class FileLoader:
+class File(ABC):
     
-    pwd = None
+    _error = Error
     
-    def __init__(self, work_directory):
-        self.pwd = work_directory
+    def __init__(self):
+        pass
     
-    def fileExist(self, filePath) -> bool:
-        return exists(f'{self.pwd}/{filePath}')
-    
+    @staticmethod
+    def exist(path):
+        return exists(path)
 
-    def load(self, fileName, openAs = 'json'):
+    @staticmethod
+    def makeDirectories(path):
+        # entry = path.indexOf('events_distributor')
+        directories = path.split('/')[:-1]
+        print(directories)
+
+    def load(self, fileName, openAs):
+        print(fileName)
         return self.__loadFile(fileName, openAs)
     
     def mkOutputDir(self, output):
@@ -29,14 +36,13 @@ class FileLoader:
         #     print('ok :)')
         # return
     
-    def __loadFile(self, filePath, openAs = None):
-        path = f'{self.pwd}{filePath}'
-        
-        print(f'path: {path}')
-        file = None
+    def __loadFile(self, path, openAs = None):
         if exists(path):
             if openAs == 'csv':
                 return self.__loadAsCSV(path)
+            elif openAs == 'json':
+                return self.__loadAsJSON(path)
+
                     # elif openAs == 'csv':
                     #     print('here')
                     #     return self.__loadAsCSV(path)
@@ -61,11 +67,10 @@ class FileLoader:
         print(f'The file {path} not exist')
         return None
     
-    def __loadAsYAML(self, path):
-        pass
-    
     def __loadAsJSON(self, path):
-        pass
+        with open(path, newline='') as jsonfile:
+            print(jsonfile)
+            return json.load(jsonfile)
     
     def __loadAsCSV(self, path):
         file = []
@@ -80,9 +85,29 @@ class FileLoader:
             print('File loaded successfuly')
             return file
     
-    def saveAsCSV(self, fileName, data):
-        file = open(f'{fileName}', 'w', newline = '')
-        with file:   
-            write = csv.writer(file)
-            write.writerows(data)
-            # write.writerows([[1,2], [3,4]])
+    # def saveAsCSV(self, fileName, data):
+    #     file = open(f'{fileName}', 'w', newline = '')
+    #     with file:   
+    #         write = csv.writer(file)
+    #         write.writerows(data)
+    #         # write.writerows([[1,2], [3,4]])
+            
+            
+            
+# os.mkdir
+# os.remove()
+  
+# # Opening JSON file
+# f = open('data.json')
+  
+# # returns JSON object as 
+# # a dictionary
+# data = json.load(f)
+  
+# # Iterating through the json
+# # list
+# for i in data['emp_details']:
+#     print(i)
+  
+# # Closing file
+# f.close()
