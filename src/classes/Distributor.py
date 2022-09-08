@@ -19,35 +19,31 @@ class Distributor:
     final = {}
     
     def __init__(self):
-        self.cfg = Configurator()
-        # try:
-        #     self.cfg = Configurator()
-        #     print(self.cfg)
-        # except Exception as error:
-        #     Error.throw(1, error, name=Distributor.__name__)
+        try:
+            self.cfg = Configurator()
+        except Exception as error:
+            Error.throw(1, error, name=Distributor.__name__)
             
     
     def start(self):
-        # event = self.cfg['event']
-        # if not event:
-        #     return False
-        # table = self.loadEventTable(event)
-        # segments = self.reduceSegments(table)
-        # cleanedSegments = self.cleanSegmentsName(segments)
-        # distributed = self.distributeProjectsBySegment(cleanedSegments, self.cfg)
-        # self.export(distributed)
-        pass
+        eventConfig = self.cfg.event
+        if not eventConfig:
+            return False
+        table = self.loadEventTable(eventConfig['name'])
+        segments = self.reduceSegments(table)
+        cleanedSegments = self.cleanSegmentsName(segments)
+        distributed = self.distributeProjectsBySegment(cleanedSegments, eventConfig)
+        self.export(distributed)
             
     
     
     @staticmethod
-    def loadEventTable(event):
-        return Importer.loadCSV(event['name'] + '.csv')
+    def loadEventTable(eventName):
+        return Importer.loadCSV(f"{eventName}.csv")
     
     @staticmethod        
     def export(event):
-        print('1')
-        for segmentName, data in event:
+        for segmentName, data in event.items():
             Exporter.saveCSV(f'{segmentName}.csv', data)
         
     @staticmethod
@@ -86,6 +82,7 @@ class Distributor:
         return segments
         
     """
+        Project distributing  
         [
             ['project', 'project', 'project'],
             ['project', 'project', 'project'],
@@ -94,15 +91,16 @@ class Distributor:
                                     [column]
         ]
     """
-    # Project distributing       
+         
+    @staticmethod
     def distributeProjectsBySegment(segments, config):
+        distributed = {}
         for segmentName in segments.keys():
             segmentConfig = next((segmentConfig for segmentConfig in config['segments'] if segmentConfig['name'] == segmentName), None)
             if not segmentConfig:
                 continue
             # pprint(segmentConfig)
             
-            # Ok, segment have name, columns, rows. What next?
             rows = []
             projectTransit = {}
             print(segmentName, segmentConfig['rows'], segmentConfig['columns'])
@@ -141,12 +139,8 @@ class Distributor:
                                 projectTransit[projectName] = {"row": row, "col": col}
                             else:
                                 del projectTransit[projectName]
-                            
-
                 rows.append(columns)
-            pprint(len(rows))
-            pprint(rows)
-            
-            return {segmentName: rows}
+            distributed[segmentName] = rows    
+        return distributed
 
   
